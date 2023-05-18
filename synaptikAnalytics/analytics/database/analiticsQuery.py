@@ -25,5 +25,5 @@ def GetCompany(userid):
    with connection.cursor() as cursor:
        cursor.execute(query)
        row = cursor.fetchone()
-       print(row[0])
+       print(row)
        return row[0]

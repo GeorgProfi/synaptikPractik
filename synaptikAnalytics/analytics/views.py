@@ -9,6 +9,7 @@ from .database import analiticsQuery
 # Create your views here.
 @csrf_exempt
 def analytics(request):
+    print(request.headers)
     body = json.loads(request.body)
     userID = jwt_decode_handler(body["access"])
     statistic = analiticsQuery.getAnaliz(analiticsQuery.GetCompany(userID['sub']))
@@ -18,12 +19,13 @@ def analytics(request):
         block_data = {
             'name': i[0],
             'total': i[1],
-            'avg':int( i[2]),
-            "allTime":  datetime.time(i[3])
+            'avg':float(i[2]),
+            "workload":  i[3].seconds
         }
         data.append(block_data)
 
-
+    print({'count': len(statistic),
+            'data': json.dumps(data) })
     return JsonResponse(
         {'count': len(statistic),
             'data': json.dumps(data) },

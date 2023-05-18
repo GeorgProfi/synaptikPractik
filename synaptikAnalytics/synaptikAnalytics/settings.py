@@ -116,9 +116,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'car-wash-student',
         'USER': 'student',
-        'PASSWORD': PASS,
-        'HOST': HOST,
-        'PORT': PORT
+        'PASSWORD': '3TnoZM',
+        'HOST': '62.113.104.229',
+        'PORT': 5433
     }
 }
 
