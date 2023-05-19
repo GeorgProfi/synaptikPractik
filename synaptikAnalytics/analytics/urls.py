@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('analitics', views.analytics),
-    path('/aboba', views.analytics),
+
+    path('topclients', views.TopClients)
 ]

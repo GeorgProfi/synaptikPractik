@@ -5,10 +5,10 @@ def getAnaliz(companyId):
     SELECT station.name,
         sum("order"."priceTotal") AS "all",
         avg("order"."priceTotal") AS avg,
-        sum("order"."endWork" - "order"."startWork") AS "allTime"
+        trunc(EXTRACT(epoch FROM sum("order"."endWork" - "order"."startWork")) / EXTRACT(epoch FROM sum(station."endWork" - station."startWork")*30) * 100::numeric, 2) AS workload
     FROM "order"
     JOIN station ON "order"."stationId" = station.id
-        where "order"."companyId" = '{companyId}'
+        where ("order"."companyId" = '{companyId}') AND ((now() - "order"."startWork") < '30 days'::interval)
     GROUP BY station.id;
     """
     with connection.cursor() as cursor:
