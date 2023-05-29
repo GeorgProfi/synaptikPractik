@@ -81,31 +81,45 @@ def diagram(request):
     date_start = body['datastart']
     date_end = body['dataend']
 
+
     dates = getinterval(date_start,date_end)
     statistic = orderDate(analiticsQuery.GetCompany(userID),date_start,date_end)
+    station_list = []
+    for j in statistic:
+        if not (j[0] in station_list):
+            station_list.append(j[0])
+    print(station_list)
+
     i = 0
-    stat_json = {}
+    orders = []
+    ordersdates =[]
     for date in dates:
+        count = 0
+        print(date)
         for stat in statistic:
 
             if str(stat[1].date()) == date:
-                print()
                 print(stat)
-                stat_mas.append([])
-    print(date_start[:10])
-    data = []
-    for i in statistic:
-        print(i)
-        block_data = {
-            'client': i[0],
-            'count': i[1],
-            'sum': i[2],
-        }
-        data.append(block_data)
+                i+=1
+                '''
+                for z in orders:
+                    if len(orders)>0 and z[0] == stat[0]:
+                        z[1] += 1
+                        print('if')
+                    else:
+                        print('else')
+                        orders.append([stat[0],1])'''
+        orders.append(i)
+        ordersdates.append(date[5:])
+        i =0
+    print(orders)
+
+
 
     return JsonResponse(
-        {'count': len(statistic),
-            'data': data },
+        {'count': len(orders),
+            'dates': ordersdates,
+            'workload': orders},
         headers={
             "Access-Control-Allow-Origin": "*"
         }

@@ -10,6 +10,7 @@ inner join  station on
 where ("order"."companyId" = '{companyId}')
 AND ("order"."startWork") > '{start}'
 		AND ("order"."endWork") < '{end}'
+		order by "station"."name" 
         """
    with connection.cursor() as cursor:
        cursor.execute(query)
