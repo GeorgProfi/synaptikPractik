@@ -1,9 +1,7 @@
-date_start = str
-date_end = str
-# период за который берём а налитику (в днях)
+
 import datetime
 from .database.orderOFdiagram import orderDate
-
+from collections import Counter
 
 def getinterval(start,end):
     start = datetime.datetime.strptime(start[:10], '%Y-%m-%d')
@@ -15,3 +13,55 @@ def getinterval(start,end):
         aboba+= datetime.timedelta(1)
 
     return  mas
+
+def GetJsonDSOC(date,ordersStation,station_list): #DSOC - date station orders count
+    ordersdates = []
+    countOrderMas = []
+    if ordersStation == []:
+        for x in station_list:
+            jsonk = {
+                'station': x,
+                'countOrder': 0
+            }
+            countOrderMas.append(jsonk)
+    else:
+        for x in station_list:
+            counts = Counter(ordersStation)
+            jsonk = {
+                'station': x,
+                'countOrder': counts[x]
+            }
+            countOrderMas.append(jsonk)
+    ordersdates.append(
+        {
+            'date': date,
+            'stationOrder': countOrderMas
+        }
+    )
+    return ordersdates
+
+def GetMasBars(date,ordersStation,station_list): #DSOC - date station orders count
+    ordersdates = []
+    countOrderMas = []
+    if ordersStation == []:
+        for x in station_list:
+            jsonk = {
+                'station': x,
+                'countOrder': 0
+            }
+            countOrderMas.append(jsonk)
+    else:
+        for x in station_list:
+            counts = Counter(ordersStation)
+            jsonk = {
+                'station': x,
+                'countOrder': counts[x]
+            }
+            countOrderMas.append(jsonk)
+    ordersdates.append(
+        {
+            'date': date,
+            'stationOrder': countOrderMas
+        }
+    )
+    return ordersdates

@@ -5,10 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 from .database.orderOFdiagram import orderDate
 
+from collections import Counter
 import json
 import datetime
 from .database import analiticsQuery,TopClient
-from .consts import date_end,date_start, getinterval
+from .consts import  getinterval,GetJsonDSOC
 # Create your views here.
 
 
@@ -92,34 +93,46 @@ def diagram(request):
 
     i = 0
     orders = []
-    ordersdates =[]
+    masvalue = [[]* 1 for _ in range((len(station_list)))]
+    print(masvalue)
+    hui = []
+    formated_dates= []
     for date in dates:
         count = 0
-        print(date)
+        formated_dates.append( date[5:])
         for stat in statistic:
 
             if str(stat[1].date()) == date:
-                print(stat)
-                i+=1
-                '''
-                for z in orders:
-                    if len(orders)>0 and z[0] == stat[0]:
-                        z[1] += 1
-                        print('if')
-                    else:
-                        print('else')
-                        orders.append([stat[0],1])'''
-        orders.append(i)
-        ordersdates.append(date[5:])
-        i =0
-    print(orders)
+                hui.append(stat[0])
 
+                ordersjson = {
 
+                    'station': stat[0],
+                    'countOrders': 1
+                }
+                print(stat[0])
+                i += 1
+        if hui == []:
+            j = 0
+            for x in station_list:
+                masvalue[j].append(0)
+                j += 1
+        else:
+            j = 0
+            for x in station_list:
+                counts = Counter(hui)
+
+                masvalue[j].append(counts[x])
+                j += 1
+        hui = []
+    print(*masvalue)
+
+    #orders.append( GetJsonDSOC(date,hui, station_list))
 
     return JsonResponse(
-        {'count': len(orders),
-            'dates': ordersdates,
-            'workload': orders},
+        { 'stationList': station_list,
+            'dates': formated_dates,
+            'values': masvalue},
         headers={
             "Access-Control-Allow-Origin": "*"
         }
