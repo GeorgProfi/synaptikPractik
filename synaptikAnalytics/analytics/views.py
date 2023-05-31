@@ -9,7 +9,7 @@ from collections import Counter
 import json
 import datetime
 from .database import analiticsQuery,TopClient
-from .consts import  getinterval,GetJsonDSOC
+from .consts import  getinterval,GetJsonDSOC,getmaxel, CountSumOfDict
 # Create your views here.
 
 
@@ -92,47 +92,59 @@ def diagram(request):
     print(station_list)
 
     i = 0
-    orders = []
+
     masvalue = [[]* 1 for _ in range((len(station_list)))]
+    dailyIncomeMas  = [[] * 1 for _ in range((len(station_list)))]
     print(masvalue)
+    negr = []
     hui = []
     formated_dates= []
     for date in dates:
-        count = 0
+
         formated_dates.append( date[5:])
         for stat in statistic:
 
             if str(stat[1].date()) == date:
                 hui.append(stat[0])
 
-                ordersjson = {
-
-                    'station': stat[0],
-                    'countOrders': 1
-                }
-                print(stat[0])
+                negr.append({
+                    f'{stat[0]}': stat[2]
+                })
+                print(stat)
                 i += 1
+        print(negr)
         if hui == []:
             j = 0
             for x in station_list:
                 masvalue[j].append(0)
+                dailyIncomeMas[j].append(0)
                 j += 1
         else:
             j = 0
+            sumOrders = CountSumOfDict(station_list,negr)
             for x in station_list:
+                carwarshIndex = station_list.index(x)
                 counts = Counter(hui)
-
                 masvalue[j].append(counts[x])
+                dailyIncomeMas[j].append(sumOrders[carwarshIndex][x])
                 j += 1
-        hui = []
-    print(*masvalue)
 
+
+
+        hui = []
+        negr=[]
+    print(dailyIncomeMas)
+    print(getmaxel(masvalue))
     #orders.append( GetJsonDSOC(date,hui, station_list))
 
     return JsonResponse(
         { 'stationList': station_list,
             'dates': formated_dates,
-            'values': masvalue},
+            'values': masvalue,
+            'maxEl': getmaxel(masvalue),
+            'dailyIncomes' : dailyIncomeMas,
+            'maxIncome': getmaxel(dailyIncomeMas)
+          },
         headers={
             "Access-Control-Allow-Origin": "*"
         }

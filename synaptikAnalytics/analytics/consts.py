@@ -65,3 +65,34 @@ def GetMasBars(date,ordersStation,station_list): #DSOC - date station orders cou
         }
     )
     return ordersdates
+
+def getmaxel(mas):
+    maxel = 0
+    for i in mas:
+        for j in i :
+            if j>maxel:
+                maxel = j
+    return maxel
+
+
+def CountSumOfDict(station_list,masDicts):
+    StationAndSum = []
+    summ = 0
+    for x in station_list:
+        summ = 0
+        for y in masDicts:
+
+            try:
+                summ+= y[x]
+
+            except:
+                print()
+        StationAndSum.append(
+            {f'{x}': summ}
+        )
+    return (StationAndSum)
+
+
+
+
+
